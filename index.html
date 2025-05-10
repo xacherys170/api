@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agregar Enlaces</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 500px;
+      width: 100%;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+    input, textarea {
+      background-color: #2a2a2a;
+      color: #f1f1f1;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    h2 {
+      text-align: center;
+    }
+    .status {
+      margin-bottom: 15px;
+      color: #90ee90;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Agregar Enlaces a la API</h2>
+    <div id="status" class="status"></div>
+    <form id="formulario">
+      <label>Nombre de la lista:</label>
+      <input name="lista" required />
+      <label>Pega aquí tus enlaces (uno por línea):</label>
+      <textarea name="enlaces" rows="10" required></textarea>
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("formulario").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        lista: form.lista.value,
+        enlaces: form.enlaces.value,
+      };
+
+      const res = await fetch("/agregar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const json = await res.json();
+      document.getElementById("status").innerText = `${json.mensaje}\nTotal en la lista: ${json.total}`;
+      form.enlaces.value = "";
+    });
+  </script>
+</body>
+</html>
